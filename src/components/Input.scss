@@ -1,0 +1,26 @@
+@charset 'utf-8';
+
+@import '../styles/_common.scss';
+
+.caibao-input {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid $theme-color-border;
+
+  label {
+    margin-right: 10px;
+    color: $theme-color-input-label;
+    user-select: none;
+  }
+
+  input {
+    flex-grow: 1;
+    flex-shrink: 0;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    height: 100%;
+  }
+}

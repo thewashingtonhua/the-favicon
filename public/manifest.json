@@ -1,0 +1,16 @@
+{
+  "short_name": "彩宝",
+  "name": "彩宝",
+  "icons": [
+    {
+      "src": "favicon-190409.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation":"portrait",
+  "theme_color": "#ce1010",
+  "background_color": "#ce1010"
+}

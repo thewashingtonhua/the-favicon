@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "react-app"
+  ],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd-mobile",
+        // "libraryDirectory": "es",
+        "style": true
+      }
+    ],
+    "@babel/plugin-proposal-export-default-from"
+  ]
+}
