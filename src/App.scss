@@ -17,6 +17,10 @@
     height: 88px;
     flex-shrink: 0;
     background-color: $theme-color-bg-card;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .toolbar__top {
@@ -25,6 +29,7 @@
 
   .toolbar__bottom {
     margin-top: 15px;
+    justify-content: flex-end;
   }
 
   .main {

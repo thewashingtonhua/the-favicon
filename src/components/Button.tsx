@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, MouseEventHandler } from 'react'
+import React, { memo, ReactNode, MouseEvent } from 'react'
 import NewTabLink from './NewTabLink'
 import './Button.scss'
 
@@ -20,7 +20,7 @@ interface Button {
   fullWidth?: boolean, // 全屏宽度
   borderRounded?: boolean, // 左右两边是否为半圆
   children?: ReactNode,
-  onClick?: MouseEventHandler,
+  onClick?: (e: MouseEvent) => void,
   [index: string]: any
 }
 
@@ -35,10 +35,10 @@ const Button = (props: Button) => {
     to,
     download,
     children,
-    borderRounded = true
+    borderRounded = false
   } = props
 
-  const _onClick = (e: any) => {
+  const _onClick = (e: MouseEvent) => {
     e && e.stopPropagation()
     if (isLoading) return
     typeof onClick === 'function' && onClick(e)

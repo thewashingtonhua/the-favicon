@@ -2,7 +2,8 @@ import React, { memo } from 'react'
 import './Input.scss'
 
 export interface ImageUploader {
-  className?: string
+  className?: string,
+  onChange?: (file: File) => void
 }
 
 const ImageUploader = (props: ImageUploader) => {
@@ -18,8 +19,8 @@ const ImageUploader = (props: ImageUploader) => {
 
   return (
     <div className={classNames.join(' ')}>
-      <label htmlFor='input-file'>上传文件</label>
-      <input type='file' name='file' id='input-file'/>
+      <label htmlFor='input-file'>上传图片</label>
+      <input type='file' name='file' id='input-file' accept='jpg,png' />
     </div>
   )
 }
