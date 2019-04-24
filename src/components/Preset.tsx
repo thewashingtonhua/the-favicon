@@ -38,7 +38,9 @@ const Preset = (props: PresetProps) => {
     typeof onToggleAll === 'function' && onToggleAll(type)
   }
 
-  const _selectdALl = data.length > 0 && data.filter(n => n.chosen).length === data.length
+  const selectdAll = data.length > 0 && data.filter(n => n.chosen).length === data.length
+
+  console.log(data.map(n => n.chosen))
 
   return (
     <div className={classNames}>
@@ -46,7 +48,7 @@ const Preset = (props: PresetProps) => {
         <Checkbox
           className='preset-title'
           value={title}
-          defaultChecked={_selectdALl}
+          defaultChecked={selectdAll}
           onChange={() => _onToggleAll(type)}
         />
       }

@@ -58,10 +58,9 @@ const reducer = (state: PresetReducerProps, action: Action) => {
       const relatedPresets = state[action.payload.category].filter(n => n.type === action.payload.type)
       const selectedAll = relatedPresets.filter(n => n.chosen).length === relatedPresets.length
       state[action.payload.category] = state[action.payload.category]
-        .map(n =>
-          n.type === action.payload.type
-            ? { ...n, chosen: !selectedAll }
-            : n
+        .map(n => n.type === action.payload.type
+          ? { ...n, chosen: !selectedAll }
+          : n
         )
       return state
     default:

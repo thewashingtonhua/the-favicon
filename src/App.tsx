@@ -8,6 +8,8 @@ const App = () => {
 
   const { presets, addSize, toggleExtension, toggleSize, toggleExtensionAll, toggleSizeAll } = usePresets()
 
+  console.log(presets.size.filter(n => n.type === 'size-android'))
+
   return (
     <div id='app' className='app'>
       <header className='toolbar__top'>
