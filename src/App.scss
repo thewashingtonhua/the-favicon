@@ -17,6 +17,9 @@
     height: 88px;
     flex-shrink: 0;
     background-color: $theme-color-bg-card;
+    display: flex;
+    align-items: center;
+    padding: 15px;
   }
 
   .toolbar__top {
@@ -25,25 +28,53 @@
 
   .toolbar__bottom {
     margin-top: 15px;
+    justify-content: flex-end;
   }
 
   .main {
     flex-grow: 1;
     display: flex;
     justify-content: flex-start;
+    align-items: stretch;
 
-    .presets {
-      width: 300px;
-      flex-shrink: 0;
+    .step {
       background-color: $theme-color-bg-card;
       overflow-y: auto;
+      flex-basis: 300px;
+      flex-shrink: 0;
+      flex-grow: 1;
+
+      &:not(:first-child) {
+        margin-left: 15px;
+      }
+
+      .step-header {
+        position: relative;
+        padding: 15px;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 15px;
+          right: 15px;
+          bottom: 0;
+          height: 2px;
+          background-color: $theme-color-border;
+        }
+
+        .step-title {
+          font-size: 20px;
+        }
+      }
+
+      .step-body {
+        position: relative;
+        padding: 15px;
+      }
     }
 
-    .previewer {
-      flex-grow: 1;
-      background-color: $theme-color-bg-card;
-      margin-left: 15px;
-      overflow-y: auto;
+    .step-3 {
+      flex-grow: 2;
 
       table {
         width: 100%;
