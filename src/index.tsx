@@ -1,5 +1,4 @@
-import '@babel/polyfill/noConflict'
-import 'react-app-polyfill/ie9'
+import 'react-app-polyfill/stable'
 import React from 'react'
 import { render } from 'react-dom'
 import { register } from './serviceWorker'

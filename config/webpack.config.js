@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const isWsl = require('is-wsl')
 const path = require('path')
 const webpack = require('webpack')
 const resolve = require('resolve')
@@ -19,10 +20,13 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 const paths = require('./paths')
+const modules = require('./modules')
 const getClientEnvironment = require('./env')
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin')
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin')
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter')
+const postcssNormalize = require('postcss-normalize')
+
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const dayjs = require('dayjs')
 const StyleLintPlugin = require('stylelint-webpack-plugin')
@@ -47,6 +51,7 @@ const cssRegex = /\.css$/
 const cssModuleRegex = /\.module\.css$/
 const sassRegex = /\.(scss|sass)$/
 const sassModuleRegex = /\.module\.(scss|sass)$/
+const lessRegex = /\.less$/
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -104,7 +109,11 @@ const configFactory = function (webpackEnv) {
                 flexbox: 'no-2009'
               },
               stage: 3
-            })
+            }),
+            // Adds PostCSS Normalize as the reset css with default options,
+            // so that it honors browserslist config in package.json
+            // which in turn let's users customize the target behavior as per their needs.
+            postcssNormalize()
           ],
           // sourceMap: isEnvProduction && shouldUseSourceMap
           sourceMap: shouldUseSourceMap
@@ -222,7 +231,9 @@ const configFactory = function (webpackEnv) {
           },
           // Use multi-process parallel running to improve the build speed
           // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true,
+          // Disabled on WSL (Windows Subsystem for Linux) due to an issue with Terser
+          // https://github.com/webpack-contrib/terser-webpack-plugin/issues/21
+          parallel: !isWsl,
           // Enable file caching
           cache: true,
           sourceMap: shouldUseSourceMap
@@ -260,10 +271,7 @@ const configFactory = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules'].concat(
-        // It is guaranteed to exist because we tweak it in `env.js`
-        process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
-      ),
+      modules: ['node_modules', paths.appNodeModules].concat(modules.additionalModulePaths || []),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -455,6 +463,29 @@ const configFactory = function (webpackEnv) {
                 'sass-loader'
               )
             },
+            {
+              test: lessRegex,
+              loader: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: shouldUseSourceMap
+                },
+                {
+                  loader: require.resolve('less-loader'),
+                  options: {
+                    sourceMap: shouldUseSourceMap,
+                    // These are for AntD
+                    modifyVars: {},
+                    javascriptEnabled: true
+                  }
+                }
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true
+            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -489,7 +520,6 @@ const configFactory = function (webpackEnv) {
           isEnvProduction
             ? {
               minify: {
-                processConditionalComments: true,
                 removeComments: true,
                 collapseWhitespace: true,
                 removeRedundantAttributes: true,
@@ -499,13 +529,13 @@ const configFactory = function (webpackEnv) {
                 keepClosingSlash: true,
                 minifyJS: true,
                 minifyCSS: true,
-                minifyURLs: true
+                minifyURLs: true,
+                processConditionalComments: true
               }
             }
             : undefined
         )
       ),
-      new webpack.HashedModuleIdsPlugin(),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       isEnvProduction &&
@@ -551,7 +581,17 @@ const configFactory = function (webpackEnv) {
       // having to parse `index.html`.
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
-        publicPath: publicPath
+        publicPath: publicPath,
+        generate: (seed, files) => {
+          const manifestFiles = files.reduce((manifest, file) => {
+            manifest[file.name] = file.path
+            return manifest
+          }, seed)
+
+          return {
+            files: manifestFiles
+          }
+        }
       }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how Webpack interprets its code. This is a practical
@@ -587,7 +627,6 @@ const configFactory = function (webpackEnv) {
           tsconfig: paths.appTsConfig,
           reportFiles: [
             '**',
-            '!**/*.json',
             '!**/__tests__/**',
             '!**/?(*.)(spec|test).*',
             '!**/src/setupProxy.*',
@@ -598,6 +637,7 @@ const configFactory = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined
         }),
+      new webpack.HashedModuleIdsPlugin(),
       new StyleLintPlugin({
         files: '**/*.(le|s?(a|c))ss'
       }),
@@ -605,7 +645,7 @@ const configFactory = function (webpackEnv) {
       GENERATE_REPORT && new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         openAnalyzer: false,
-        reportFilename: `../report/${process.env.BUILD_ENV.toLowerCase()}/report-${dayjs().format('YYYYMMDD-HHmmss')}.html`
+        reportFilename: `../report/report-${dayjs().format('YYYYMMDD-HHmmss')}.html`
       })
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
@@ -615,6 +655,7 @@ const configFactory = function (webpackEnv) {
       dgram: 'empty',
       dns: 'mock',
       fs: 'empty',
+      http2: 'empty',
       net: 'empty',
       tls: 'empty',
       child_process: 'empty'
