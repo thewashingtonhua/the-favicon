@@ -1,78 +1,47 @@
-import React, { memo } from 'react'
-import { Checkbox } from './'
+import React, { MouseEvent } from 'react'
 import './Preset.scss'
-import { PresetItem } from '../utils/interfaces'
+import ReactSVG from 'react-svg'
 
 interface PresetProps {
-  type?: string,
-  title?: string,
-  data: PresetItem[],
-  onToggleItem?: (type: string, value: string | number, checked?: boolean) => void,
-  onToggleAll?: (type: string) => void,
+  icon?: string,
+  value?: string,
+  chosen?: boolean,
+  onClick?: () => void,
   className?: string,
-  formatter?: (value: string | number) => string
 }
 
 const Preset = (props: PresetProps) => {
   const {
-    type = '',
-    title = '',
-    data = [],
-    onToggleItem,
-    onToggleAll,
-    className = '',
-    formatter
+    icon,
+    value = '',
+    chosen = false,
+    onClick,
+    className = ''
   } = props
 
   const classNames = [
     'preset',
-    type && `preset--${type}`,
+    value && `preset--${value}`,
+    chosen && `preset--chosen`,
     className
   ].filter(Boolean).join(' ')
 
-  function _onToggleItem (type: string, value: string | number, checked: boolean) {
-    typeof onToggleItem === 'function' && onToggleItem(type, value, checked)
+  function _onClick (e: MouseEvent) {
+    e && e.stopPropagation()
+    typeof onClick === 'function' && onClick()
   }
 
-  function _onToggleAll (type: string) {
-    typeof onToggleAll === 'function' && onToggleAll(type)
-  }
-
-  const selectdAll = data.length > 0 && data.filter(n => n.chosen).length === data.length
-
-  console.log(data.map(n => n.chosen))
+  const isSVG = true
 
   return (
-    <div className={classNames}>
-      { title &&
-        <Checkbox
-          className='preset-title'
-          value={title}
-          defaultChecked={selectdAll}
-          onChange={() => _onToggleAll(type)}
-        />
-      }
-      <ul className='preset-list preset-list'>
-        { data.map((item) => {
-          const checked = item.chosen
-          const _value = formatter
-            ? formatter(item.value)
-            : item.value
-
-          return (
-            <li key={item.value}>
-              <Checkbox
-                name={type}
-                value={_value}
-                defaultChecked={checked}
-                onChange={(checked) => _onToggleItem(type, item.value, checked)}
-              />
-            </li>
-          )
-        })}
-      </ul>
+    <div className={classNames} onClick={_onClick}>
+      { icon && (isSVG
+        ? <ReactSVG src={icon} className='preset__icon' />
+        : <img className='preset__icon' src={icon} alt={value} />
+      )}
+      <p className='preset__name'>{value}</p>
     </div>
   )
 }
 
-export default memo(Preset)
+export default Preset

@@ -875,7 +875,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5":
   version "7.4.5"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
   integrity sha1-WCu1MfX53GfS/LaCl5iU914lPxI=
@@ -1453,6 +1453,13 @@
     "@svgr/plugin-jsx" "^4.3.0"
     "@svgr/plugin-svgo" "^4.2.0"
     loader-utils "^1.2.3"
+
+"@tanem/svg-injector@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.npm.taobao.org/@tanem/svg-injector/download/@tanem/svg-injector-8.0.6.tgz#f0dcdb676bbd8363d43e9db3a6d493cbed251310"
+  integrity sha1-8NzbZ2u9g2PUPp2zptSTy+0lExA=
+  dependencies:
+    "@babel/runtime" "^7.4.5"
 
 "@types/babel__core@^7.1.0":
   version "7.1.2"
@@ -9853,6 +9860,15 @@ react-loading@^2.0.2:
   version "2.0.3"
   resolved "https://registry.npm.taobao.org/react-loading/download/react-loading-2.0.3.tgz#e8138fb0c3e4674e481b320802ac7048ae14ffb9"
   integrity sha1-6BOPsMPkZ05IGzIIAqxwSK4U/7k=
+
+react-svg@^10.0.4:
+  version "10.0.4"
+  resolved "https://registry.npm.taobao.org/react-svg/download/react-svg-10.0.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-svg%2Fdownload%2Freact-svg-10.0.4.tgz#41f12e951f047d65a98ce9dfa0df4d06be34e60f"
+  integrity sha1-QfEulR8EfWWpjOnfoN9NBr405g8=
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+    "@tanem/svg-injector" "^8.0.6"
+    prop-types "^15.7.2"
 
 react-transition-group@^4.0.0:
   version "4.0.1"

@@ -1,0 +1,17 @@
+@charset 'utf-8';
+
+@import '../styles/_common.scss';
+
+.appbar {
+  height: 72px;
+  flex-shrink: 0;
+  background-color: $theme-color-card;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 15px;
+
+  .app-title {
+    color: #fff;
+  }
+}

@@ -2,4 +2,50 @@
 
 @import '../styles/_common.scss';
 
-// .img-uploader {}
+.img-uploader__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .img-uploader__icon {
+    svg {
+      width: 100px;
+      height: 100px;
+      fill: $theme-color-text;
+      transition: fill 0.3s ease-out;
+    }
+  }
+
+  .img-uploader__text {
+    white-space: nowrap;
+    transition: color 0.3s ease-out;
+  }
+
+  input[type='file'] {
+    display: none;
+  }
+
+  &:hover,
+  &.img-uploader--hover {
+    .img-uploader__icon {
+      svg {
+        fill: $theme-color-title;
+      }
+    }
+
+    .img-uploader__text {
+      color: $theme-color-title;
+    }
+  }
+
+  &.img-uploader--hover {
+    border: 2px dashed #fff;
+  }
+}

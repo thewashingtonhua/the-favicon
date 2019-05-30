@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 // Reducer 的 Action
 export interface Action {
   type: string, // Action 的 type
@@ -11,8 +13,18 @@ export interface OptionBag {
   [propName: string]: any
 }
 
-export interface PresetItem {
-  type: string,
-  value: string | number,
+export interface ExtensionProps {
+  value: string,
   chosen?: boolean
+}
+
+export interface SizeProps {
+  value: string,
+  data: number[],
+  chosen?: boolean
+}
+
+export interface ReactCommon {
+  className?: string,
+  children?: ReactNode
 }

@@ -6,7 +6,7 @@
   position: relative;
   display: block;
   border-radius: 6px;
-  background-color: $theme-color-bg-card;
+  background-color: $theme-color-card;
 
   & + &:not(:first-child) {
     margin-top: 10px;

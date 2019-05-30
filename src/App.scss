@@ -3,7 +3,7 @@
 @import './styles/_common.scss';
 
 #app {
-  background-color: $theme-color-bg-body;
+  background-color: $theme-color-bg;
   width: 100%;
   height: 100%;
   position: relative;
@@ -11,25 +11,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-
-  .toolbar__top,
-  .toolbar__bottom {
-    height: 88px;
-    flex-shrink: 0;
-    background-color: $theme-color-bg-card;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-  }
-
-  .toolbar__top {
-    margin-bottom: 15px;
-  }
-
-  .toolbar__bottom {
-    margin-top: 15px;
-    justify-content: flex-end;
-  }
+  padding-bottom: 15px;
 
   .main {
     flex-grow: 1;
@@ -38,38 +20,14 @@
     align-items: stretch;
 
     .step {
-      background-color: $theme-color-bg-card;
-      overflow-y: auto;
-      flex-basis: 300px;
-      flex-shrink: 0;
-      flex-grow: 1;
-
       &:not(:first-child) {
         margin-left: 15px;
       }
+    }
 
-      .step-header {
-        position: relative;
-        padding: 15px;
-
-        &::after {
-          content: '';
-          position: absolute;
-          left: 15px;
-          right: 15px;
-          bottom: 0;
-          height: 2px;
-          background-color: $theme-color-border;
-        }
-
-        .step-title {
-          font-size: 20px;
-        }
-      }
-
+    .step-1 {
       .step-body {
-        position: relative;
-        padding: 15px;
+        justify-content: center;
       }
     }
 
