@@ -20,12 +20,25 @@ function generateImage (dataURL: string, options: ImagePresetProps): ExportItem 
   img.src = dataURL
   if (!ctx) return undefined
 
-  ctx.drawImage(img, 0, 0)
+  if (options.filename.startsWith('mstile') && options.fillColor) {
+    ctx.fillStyle = options.fillColor
+    ctx.rect(0, 0, canvas.width, canvas.height)
+  }
+
+  const minSize = Math.min(options.width, options.height)
+  const x = options.width / 2 - minSize / 2
+  const y = options.height / 2 - minSize / 2
+
+  ctx.drawImage(img, x, y, minSize, minSize)
+  const data = canvas.toDataURL(options.mime)
 
   const output = {
     filename: options.filename,
     mime: options.mime,
-    data: canvas.toDataURL(options.mime)
+    // data: data
+    /* eslint-disable no-useless-escape */
+    data: data.replace(/^data:image\/(png|x\-icon);base64,/, '')
+    /* eslint-enable no-useless-escape */
   }
 
   return output
@@ -34,10 +47,15 @@ function generateImage (dataURL: string, options: ImagePresetProps): ExportItem 
 function download (items: ExportItem[]) {
   if (!items.length) return
 
+  if (items.length === 1) {
+    FileSaver.saveAs(items[0].data, items[0].filename)
+    return
+  }
+
   const zip = new JSZip()
   for (const item of items) {
     if (item.mime.startsWith('image')) {
-      zip.file(item.filename, item.data)
+      zip.file(item.filename, item.data, { base64: true, binary: true })
     } else {
       zip.file(item.filename, item.data)
     }
@@ -48,12 +66,22 @@ function download (items: ExportItem[]) {
   })
 }
 
+function generateManifest (appName: string, appShortName: string, fillColor: string) {}
+
+function generateBrowserConfig (fillColor: string) {}
+
 const Exporter = () => {
-  const { presets, getSelectPresets, getSelectPresetItems } = useContext(PresetContext)
+  const {
+    presets,
+    fillColor,
+    useManifest,
+    appName,
+    appShortName,
+    getSelectPresets
+  } = useContext(PresetContext)
   const { file } = useContext(FileContext)
 
   const selectedPresets = getSelectPresets(presets)
-  const selectedPresetItems = getSelectPresetItems(presets)
 
   function _export (presetItems: ImagePresetProps[]): void {
     if (!file) {
@@ -65,20 +93,28 @@ const Exporter = () => {
 
     presetItems.forEach(presetItem => {
       if (presetItem.mime.startsWith('image')) {
-        const img = generateImage(file, presetItem)
+        const options = { ...presetItem }
+        if (presetItem.name === 'Windows') {
+          options.fillColor = fillColor
+        }
+        const img = generateImage(file, options)
         if (img) {
           filesToDownload.push(img)
         }
       }
     })
 
-    if (selectedPresets.find(n => n.name === 'Android')) {
+    if (useManifest) {
       // Generate manifest.json
+      generateManifest(appName, appShortName, fillColor)
     }
 
     if (selectedPresets.find(n => n.name === 'Windows')) {
       // Generate browserConfig.xml
+      generateBrowserConfig(fillColor)
     }
+
+    console.log(filesToDownload)
 
     download(filesToDownload)
   }
@@ -94,7 +130,7 @@ const Exporter = () => {
           </div>
         </div>
         <div className='tbody'>
-          { selectedPresetItems.map(preset => (
+          { selectedPresets.map(preset => (
             <div className='tr' key={preset.filename}>
               <div className='td'>{preset.width} &times; {preset.height}</div>
               <div className='td'>{preset.filename}</div>
@@ -112,7 +148,7 @@ const Exporter = () => {
       <div className='toolbar'>
         <Button fullWidth onClick={e => {
           e && e.stopPropagation()
-          _export(selectedPresetItems)
+          _export(selectedPresets)
         }}>下载全部</Button>
       </div>
 

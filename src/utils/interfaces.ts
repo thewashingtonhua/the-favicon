@@ -14,17 +14,14 @@ export interface OptionBag {
 }
 
 export interface ImagePresetProps {
+  name: string,
   width: number,
   height: number,
   mime: string,
   filename: string,
-  desc?: string
-}
-
-export interface PresetProps {
-  name: string,
-  value: Array<ImagePresetProps>,
-  chosen?: boolean
+  desc: string,
+  chosen: boolean,
+  fillColor?: string
 }
 
 export interface ReactCommon {

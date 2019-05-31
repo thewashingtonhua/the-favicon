@@ -28,6 +28,13 @@ const App = () => {
 
   const { presets, togglePreset } = useContext(PresetContext)
 
+  const presetKeys: {name: string, chosen: boolean}[] = []
+  presets.forEach(n => {
+    if (!presetKeys.find(m => m.name === n.name && m.chosen === n.chosen)) {
+      presetKeys.push({ name: n.name, chosen: n.chosen })
+    }
+  })
+
   return (
     <div id='app' className='app'>
       <AppBar />
@@ -42,7 +49,7 @@ const App = () => {
           {/* <AddPreset onSubmit={size => addPreset('size', size)} /> */}
 
           <PresetList title='预设'>
-            { presets.map(n =>
+            { presetKeys.map(n =>
               <Preset
                 key={n.name}
                 icon={ICONS[n.name.toLowerCase()]}
