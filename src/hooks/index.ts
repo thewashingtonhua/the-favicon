@@ -1,5 +1,3 @@
 export { default as useClickOutside } from './useClickOutside'
-export { default as useFile } from './useFile'
 export { default as useFixedViewport } from './useFixedViewport'
 export { default as useInterval } from './useInterval'
-export { default as usePresets } from './usePresets'

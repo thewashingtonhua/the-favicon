@@ -13,18 +13,27 @@ export interface OptionBag {
   [propName: string]: any
 }
 
-export interface ExtensionProps {
-  value: string,
-  chosen?: boolean
+export interface ImagePresetProps {
+  width: number,
+  height: number,
+  mime: string,
+  filename: string,
+  desc?: string
 }
 
-export interface SizeProps {
-  value: string,
-  data: number[],
+export interface PresetProps {
+  name: string,
+  value: Array<ImagePresetProps>,
   chosen?: boolean
 }
 
 export interface ReactCommon {
   className?: string,
   children?: ReactNode
+}
+
+export interface ExportItem {
+  filename: string,
+  mime: string,
+  data: string
 }

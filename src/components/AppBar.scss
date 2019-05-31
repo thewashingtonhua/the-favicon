@@ -7,11 +7,24 @@
   flex-shrink: 0;
   background-color: $theme-color-card;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 15px;
   margin-bottom: 15px;
 
   .app-title {
     color: #fff;
+  }
+
+  .social-links {
+    a {
+      display: block;
+
+      svg {
+        width: 32px;
+        height: 32px;
+        fill: $theme-color-text;
+      }
+    }
   }
 }

@@ -1,7 +1,6 @@
 import React, { memo, useState, MouseEvent } from 'react'
 import './AddPreset.scss'
 import { Button } from './'
-import { ButtonSize } from './Button'
 
 interface AddPresetProps {
   onSubmit?: (size: any) => void
@@ -37,7 +36,7 @@ const AddPreset = (props: AddPresetProps) => {
             }
           }}
         />
-        <Button size={ButtonSize.Small} onClick={submit}>添加</Button>
+        <Button onClick={submit}>添加</Button>
       </div>
     </div>
   )

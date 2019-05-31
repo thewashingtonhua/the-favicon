@@ -49,3 +49,29 @@
     border: 2px dashed #fff;
   }
 }
+
+.img-previewer__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .img-wrapper {
+    width: 300px;
+    height: 300px;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .btn {
+    margin-top: 30px;
+  }
+}

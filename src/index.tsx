@@ -4,9 +4,18 @@ import { render } from 'react-dom'
 import { register } from './serviceWorker'
 import App from './App'
 import './styles/global.scss'
+import { PresetContextProvider, FileContextProvider } from 'context'
+
+const Comp = (
+  <PresetContextProvider>
+    <FileContextProvider>
+      <App />
+    </FileContextProvider>
+  </PresetContextProvider>
+)
 
 render(
-  <App />,
+  Comp,
   document.getElementById('root') as HTMLElement
 )
 

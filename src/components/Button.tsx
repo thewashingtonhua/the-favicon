@@ -2,16 +2,9 @@ import React, { memo, ReactNode, MouseEvent } from 'react'
 import NewTabLink from './NewTabLink'
 import './Button.scss'
 
-export enum ButtonSize {
-  Large = 'large',
-  Medium = 'medium',
-  Small = 'small'
-}
-
 interface Button {
   id?: string,
   className?: string,
-  size?: ButtonSize,
   disabled?: boolean,
   isLoading?: boolean, // 是否处于加载中状态
   to?: string|any, // 选填，链接地址
@@ -28,12 +21,12 @@ const Button = (props: Button) => {
   const {
     id,
     className,
-    size = ButtonSize.Large,
     disabled = false,
     isLoading = false,
     onClick,
     to,
     download,
+    fullWidth,
     children,
     borderRounded = false
   } = props
@@ -47,9 +40,9 @@ const Button = (props: Button) => {
   // 样式相关
   const classNames = [
     'btn',
-    `btn--${size}`,
     disabled && 'btn--disabled',
     borderRounded && 'btn--border-rounded',
+    fullWidth && 'btn--fullwidth',
     className
   ].filter(Boolean)
 
