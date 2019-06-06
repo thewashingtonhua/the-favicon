@@ -24,6 +24,13 @@
         width: 32px;
         height: 32px;
         fill: $theme-color-text;
+        transition: fill 0.3s ease-out;
+      }
+
+      &:hover {
+        svg {
+          fill: $theme-color-title;
+        }
       }
     }
   }
