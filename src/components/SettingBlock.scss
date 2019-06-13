@@ -2,14 +2,14 @@
 
 @import '../styles/_common.scss';
 
-.preset-list__container {
-  margin-bottom: 30px;
+.setting-block__container {
+  margin-bottom: 15px;
 
-  .preset-list__title {
+  .setting-block__title {
     font-size: 16px;
     color: $theme-color-title;
     line-height: 2;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     position: relative;
     padding-left: 15px;
 
@@ -25,9 +25,10 @@
     }
   }
 
-  .preset-list__content {
+  .setting-block__content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 15px;
   }
 }

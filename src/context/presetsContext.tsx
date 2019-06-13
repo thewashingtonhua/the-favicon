@@ -4,13 +4,15 @@ import { Action, ImagePresetProps } from '../utils/interfaces'
 export interface PresetContextState {
   presets: ImagePresetProps[],
   fillColor: string,
+  themeColor: string,
   useManifest: boolean,
   appName: string,
   appShortName: string,
 }
 
 const initialState: PresetContextState = {
-  fillColor: '',
+  fillColor: '#ffffff',
+  themeColor: '#ffffff',
   useManifest: true,
   appName: '',
   appShortName: '',
@@ -58,6 +60,11 @@ const reducer = (state: PresetContextState, action: Action) => {
         ...state,
         fillColor: action.payload
       }
+    case 'SET_THEMECOLOR':
+      return {
+        ...state,
+        themeColor: action.payload
+      }
     case 'TOGGLE_USE_MANIFEST':
       return state.useManifest ? {
         ...state,
@@ -85,6 +92,7 @@ const reducer = (state: PresetContextState, action: Action) => {
 export const PresetContext = createContext({
   presets: initialState.presets,
   fillColor: initialState.fillColor,
+  themeColor: initialState.themeColor,
   useManifest: initialState.useManifest,
   appName: initialState.appName,
   appShortName: initialState.appShortName,
@@ -92,6 +100,7 @@ export const PresetContext = createContext({
   togglePreset: (name: string) => {},
   toggleUseManifest: () => {},
   setFillColor: (color: string) => {},
+  setThemeColor: (color: string) => {},
   setAppName: (name: string) => {},
   setAppShortName: (name: string) => {}
 })
@@ -119,6 +128,10 @@ export const PresetContextProvider = (props: PresetContextProviderProps) => {
     dispatch({ type: 'SET_FILLCOLOR', payload: color })
   }
 
+  function setThemeColor (color: string) {
+    dispatch({ type: 'SET_THEMECOLOR', payload: color })
+  }
+
   function setAppName (name: string) {
     dispatch({ type: 'SET_APP_NAME', payload: name })
   }
@@ -133,6 +146,7 @@ export const PresetContextProvider = (props: PresetContextProviderProps) => {
     getSelectPresets,
     toggleUseManifest,
     setFillColor,
+    setThemeColor,
     setAppName,
     setAppShortName
   }
