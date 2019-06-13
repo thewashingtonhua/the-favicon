@@ -19,6 +19,11 @@
   line-height: 40px;
   font-size: 16px;
   padding: 0 24px;
+  transition: background-color 0.3s ease-out;
+
+  &:hover {
+    background-color: lighten($theme-color-button, 10%);
+  }
 
   .btn__content {
     position: relative;

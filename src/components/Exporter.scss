@@ -26,13 +26,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 64px;
+      height: 50px;
     }
 
     .th,
     .td {
       text-align: left;
-      padding: 10px 15px;
+      padding: 0 15px;
 
       &:nth-child(1) {
         width: 20%;
