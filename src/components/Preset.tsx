@@ -21,7 +21,7 @@ const Preset = (props: PresetProps) => {
 
   const classNames = [
     'preset',
-    value && `preset--${value}`,
+    value && `preset--${value.toLowerCase()}`,
     chosen && `preset--chosen`,
     className
   ].filter(Boolean).join(' ')

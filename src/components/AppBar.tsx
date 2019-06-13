@@ -6,7 +6,10 @@ import iconGithub from '../assets/github.svg'
 const AppBar = () => {
   return (
     <header className='appbar'>
-      <h1 className='app-title'>The · Favicon</h1>
+      <div className='brand'>
+        <h1 className='app-title'>The · Favicon</h1>
+        <p className='app-intro'>一键生成各种 Favicon</p>
+      </div>
       <div className='social-links'>
         <a href='https://github.com/tonghuashuo/the-favicon' target='_blank' rel='noopener noreferrer'>
           <ReactSVG src={iconGithub} />
