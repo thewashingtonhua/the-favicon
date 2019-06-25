@@ -112,6 +112,7 @@
   "scripts": {
     "dev": "cross-env PORT=5007 node scripts/start.js",
     "build": "node scripts/build.js",
+    "postbuild": "cp -f README.md dist/README.md",
     "deploy": "yarn build && gh-pages -d dist -b master"
   },
   "standard": {
