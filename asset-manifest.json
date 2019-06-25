@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/the-favicon/static/css/main.27797caa.chunk.css",
+    "main.js": "/the-favicon/static/js/main.042693d5.chunk.js",
+    "main.js.map": "/the-favicon/static/js/main.042693d5.chunk.js.map",
+    "runtime~main.js": "/the-favicon/static/js/runtime~main.f92f1c61.js",
+    "runtime~main.js.map": "/the-favicon/static/js/runtime~main.f92f1c61.js.map",
+    "static/css/2.ca025b70.chunk.css": "/the-favicon/static/css/2.ca025b70.chunk.css",
+    "static/js/2.73de653f.chunk.js": "/the-favicon/static/js/2.73de653f.chunk.js",
+    "static/js/2.73de653f.chunk.js.map": "/the-favicon/static/js/2.73de653f.chunk.js.map",
+    "index.html": "/the-favicon/index.html",
+    "precache-manifest.88622c197acdf021f3ebdf9efabd42fb.js": "/the-favicon/precache-manifest.88622c197acdf021f3ebdf9efabd42fb.js",
+    "service-worker.js": "/the-favicon/service-worker.js",
+    "static/css/2.ca025b70.chunk.css.map": "/the-favicon/static/css/2.ca025b70.chunk.css.map",
+    "static/css/main.27797caa.chunk.css.map": "/the-favicon/static/css/main.27797caa.chunk.css.map",
+    "static/media/android.svg": "/the-favicon/static/media/android.689382f7.svg",
+    "static/media/github.svg": "/the-favicon/static/media/github.2c3bf0c0.svg",
+    "static/media/ios.svg": "/the-favicon/static/media/ios.8d121c21.svg",
+    "static/media/upload.svg": "/the-favicon/static/media/upload.aba8983e.svg",
+    "static/media/web.svg": "/the-favicon/static/media/web.61b3da43.svg",
+    "static/media/windows.svg": "/the-favicon/static/media/windows.0c00adc5.svg"
+  }
+}
