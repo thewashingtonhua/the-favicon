@@ -1,3 +1,3 @@
-# icon-generator
+# The · Favicon
 
-Generate icon of all sizes for different platform requirement.
+Generate icons of all sizes for common platforms (Web / iOS / Android / Windows).
