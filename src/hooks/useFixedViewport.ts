@@ -1,18 +1,16 @@
 import { useEffect } from 'react'
 
+function fix () {
+  document.body.style.height = window.innerHeight + 'px'
+}
+
 /**
- * @description 修复 100vh 超出实际可见区域的问题
+ * @description 修复 100vh 在部分设备中超出实际可见区域的问题
  */
 export default function useFixedViewport () {
   useEffect(() => {
-    function fix () {
-      // const elem = document.querySelector('#app-root') as HTMLElement || document.body
-      const elem = document.body
-      elem.style.height = window.innerHeight + 'px'
-    }
-
-    window.addEventListener('resize', fix)
     fix()
+    window.addEventListener('resize', fix)
 
     return () => {
       window.removeEventListener('resize', fix)

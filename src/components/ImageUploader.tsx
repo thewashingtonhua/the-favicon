@@ -21,7 +21,8 @@ const ImageUploader = () => {
     }
   }
 
-  function getFile () {
+  // 以 dataURL 的方式读取文件
+  function readFile () {
     const _input = input.current
     if (_input && _input.files && _input.files.length) {
       const file = _input.files[0]
@@ -48,11 +49,11 @@ const ImageUploader = () => {
   }
 
   function _onDrop () {
-    getFile()
+    readFile()
   }
 
   function _onChange () {
-    getFile()
+    readFile()
   }
 
   function reset (e: MouseEvent) {
@@ -71,6 +72,7 @@ const ImageUploader = () => {
   ].filter(Boolean).join(' ')
 
   return file
+    // 文件上传后，显示预览，并提供重选功能
     ? (
       <div className={previewerClassNames}>
         <div className='img-wrapper'>
@@ -79,6 +81,7 @@ const ImageUploader = () => {
         <Button onClick={reset}>重新上传</Button>
       </div>
     )
+    // 未上传，或选择重选，则显示上传控件
     : (
       <div
         className={uploaderClassNames}

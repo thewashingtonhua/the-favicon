@@ -2,25 +2,21 @@ import React, { useContext } from 'react'
 import './App.scss'
 import { useFixedViewport } from './hooks'
 import { AppBar, Step, ImageUploader, Preset, PresetList, Exporter, SettingBlock, FormItem } from './components'
+import { PresetContext } from 'context'
+import { OptionBag } from 'utils/interfaces'
 import iconAndroid from './assets/android.svg'
 import iconIOS from './assets/ios.svg'
 import iconWeb from './assets/web.svg'
 import iconWindows from './assets/windows.svg'
-import { PresetContext } from 'context'
 
-interface IconProps {
-  android: string,
-  ios: string,
-  web: string,
-  windows: string,
-  [index: string]: string
-}
-
-const ICONS: IconProps = {
-  android: iconAndroid,
-  ios: iconIOS,
-  web: iconWeb,
-  windows: iconWindows
+/**
+ * @description 图标常量
+ */
+const ICONS: OptionBag = {
+  ANDROID: iconAndroid,
+  IOS: iconIOS,
+  WEB: iconWeb,
+  WINDOWS: iconWindows
 }
 
 const App = () => {
@@ -33,10 +29,11 @@ const App = () => {
     setFillColor
   } = useContext(PresetContext)
 
+  // 获取预设列表，及其勾选状态
   const presetKeys: {name: string, chosen: boolean}[] = []
-  presets.forEach(n => {
-    if (!presetKeys.find(m => m.name === n.name && m.chosen === n.chosen)) {
-      presetKeys.push({ name: n.name, chosen: n.chosen })
+  presets.forEach(preset => {
+    if (!presetKeys.find(key => key.name === preset.name)) {
+      presetKeys.push({ name: preset.name, chosen: preset.chosen })
     }
   })
 
@@ -58,7 +55,7 @@ const App = () => {
               { presetKeys.map(n =>
                 <Preset
                   key={n.name}
-                  icon={ICONS[n.name.toLowerCase()]}
+                  icon={ICONS[n.name.toUpperCase()]}
                   value={n.name}
                   chosen={n.chosen}
                   onClick={() => { togglePreset(n.name) }}

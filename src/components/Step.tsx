@@ -6,6 +6,9 @@ interface StepProps extends ReactCommon {
   title?: string
 }
 
+/**
+ * @description 步骤面板
+ */
 const Step = (props: StepProps) => {
   const {
     className,

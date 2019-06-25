@@ -1,12 +1,15 @@
 import React from 'react'
 import ReactLoading, { LoadingProps } from 'react-loading'
-import './LoadingModule.scss'
+import './Loading.scss'
 
-interface LoadingModule {
+interface Loading {
   size?: number
 }
 
-const LoadingModule = (props: LoadingModule) => {
+/**
+ * @description 加载组件
+ */
+const Loading = (props: Loading) => {
   const {
     size = 64
   } = props
@@ -17,10 +20,10 @@ const LoadingModule = (props: LoadingModule) => {
   }
 
   return (
-    <div className='loading-module'>
+    <div className='loading'>
       <ReactLoading type='spinningBubbles' color='#999' {...otherProps} />
     </div>
   )
 }
 
-export default LoadingModule
+export default Loading

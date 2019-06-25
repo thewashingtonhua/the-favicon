@@ -4,19 +4,42 @@ import { randomString } from 'utils/utils'
 import ReactToggle from 'react-toggle'
 import 'react-toggle/style.css'
 
+/**
+ * @description 表单项
+ */
 interface FormItemProps {
+  /**
+   * @description 指定表单项的 id，用于关联 label。不指定则自动生成随机字符串作为 id
+   */
   id?: string,
+  /**
+   * @description 表单项的 title
+   */
   title?: string,
+  /**
+   * @description input 的类型
+   */
   type?: string,
+  /**
+   * @description 是否禁用
+   */
   disabled?: boolean,
+  /**
+   * @description 是否勾选（仅用于 CheckBox）
+   */
   checked?: boolean,
+  /**
+   * @description input 的取值
+   */
   value?: string,
+  /**
+   * @description input 内容变更时触发
+   */
   onChange?: (value: string) => void,
+  /**
+   * @description 支持添加额外的样式
+   */
   className?: string,
-}
-
-function getRandomID () {
-  return randomString()
 }
 
 const FormItem = (props: FormItemProps) => {
@@ -43,12 +66,12 @@ const FormItem = (props: FormItemProps) => {
     onChange && onChange(e.target.value)
   }
 
-  const _id = id || getRandomID()
+  // 若未指定 id，则自动生成一串随机字符串作为 id
+  const _id = id || randomString()
 
   function getInput () {
     switch (type) {
       case 'checkbox':
-        // return <input type='checkbox'  checked={checked} onChange={_onChange} />
         return <ReactToggle checked={checked} disabled={disabled} onChange={_onChange} />
       case 'color':
         return <div className='color-picker'>

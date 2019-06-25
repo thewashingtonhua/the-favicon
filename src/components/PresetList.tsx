@@ -6,6 +6,9 @@ interface PresetListProps {
   children: ReactNode
 }
 
+/**
+ * @description 预设面板，用于容纳预设
+ */
 const PresetList = (props: PresetListProps) => {
   const {
     title = '',

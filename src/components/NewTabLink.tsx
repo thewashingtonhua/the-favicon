@@ -9,6 +9,9 @@ interface NewTabLink {
   children?: ReactNode
 }
 
+/**
+ * @description 在新标签中打开
+ */
 const NewTabLink = (props: NewTabLink) => {
   const options = {
     href: props.to || props.href || '',

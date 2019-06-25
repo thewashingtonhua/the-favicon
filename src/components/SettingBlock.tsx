@@ -6,6 +6,9 @@ interface SettingBlockProps {
   children: ReactNode
 }
 
+/**
+ * @description 设置面板，用于容纳设置项
+ */
 const SettingBlock = (props: SettingBlockProps) => {
   const {
     title = '',

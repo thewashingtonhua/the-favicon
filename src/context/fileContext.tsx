@@ -1,7 +1,13 @@
 import React, { useReducer, createContext, ReactNode } from 'react'
 import { Action } from '../utils/interfaces'
 
+/**
+ * @description 文件上下文
+ */
 export interface FileContextState {
+  /**
+   * @description 将文件保存为 dataURL，因为这里我们只关心图像的内容，文件的其他属性不重要
+   */
   file: string
 }
 

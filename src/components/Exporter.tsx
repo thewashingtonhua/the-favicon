@@ -9,46 +9,63 @@ import FileSaver from 'file-saver'
 /**
  * @description 通过 canvas 创建各尺寸的图片文件
  * @param dataURL 图片文件的 dataURL
- * @param options 该图片文件的配置信息（尺寸、颜色、扩展名、文件名等）
+ * @param options 目标图片的配置信息（尺寸、颜色、扩展名、文件名等）
  */
-function generateImage (dataURL: string, options: ImagePresetProps): ExportItem | undefined {
-  const body = document.querySelector('body')
-  if (!body) return undefined
-
+function generateImage (file: string, options: ImagePresetProps): ExportItem | undefined {
   const canvas = document.createElement('canvas')
   canvas.width = options.width
   canvas.height = options.height
-  // body.appendChild(canvas)
 
   const ctx = canvas.getContext('2d')
-  const img = new Image()
-  img.src = dataURL
   if (!ctx) return undefined
 
+  const img = new Image()
+  img.src = file
+
+  // 图片不一定都是正方形
+  // 这里确保目标图片能完整显示在指定区域内
+  const minSize = Math.min(options.width, options.height)
+  let x = 0
+  let y = 0
+  let w = minSize
+  let h = minSize
+
   if (options.filename.startsWith('mstile') && options.fillColor) {
+    // Windows Tile 需要填充背景色
     ctx.fillStyle = options.fillColor
     ctx.rect(0, 0, canvas.width, canvas.height)
+    ctx.fill()
+
+    // 并将图标缩放为 2 / 3
+    x = options.width / 2 - minSize / 3
+    y = options.height / 2 - minSize / 3
+    w = minSize * 2 / 3
+    h = minSize * 2 / 3
+  } else {
+    // 其他图片则填满，不缩放
+    x = options.width / 2 - minSize / 2
+    y = options.height / 2 - minSize / 2
   }
 
-  const minSize = Math.min(options.width, options.height)
-  const x = options.width / 2 - minSize / 2
-  const y = options.height / 2 - minSize / 2
-
-  ctx.drawImage(img, x, y, minSize, minSize)
-  const data = canvas.toDataURL(options.mime)
+  ctx.drawImage(img, x, y, w, h)
 
   const output = {
     filename: options.filename,
     mime: options.mime,
-    // data: data
+    // JSZip 要求 base64 编码的图片不带前缀，因此这里要去掉
     /* eslint-disable no-useless-escape */
-    data: data.replace(/^data:image\/(png|x\-icon);base64,/, '')
+    data: canvas.toDataURL(options.mime).replace(/^data:image\/(png|x\-icon);base64,/, '')
     /* eslint-enable no-useless-escape */
   }
 
   return output
 }
 
+/**
+ * @description 生成应用了选中图标的 HTML 模板
+ * @param presetItems 被选中的预设项
+ * @param fillColor 填充色
+ */
 function generateBaseHTML (presetItems: ImagePresetProps[], fillColor: string): ExportItem {
   const metas: string[] = []
 
@@ -65,6 +82,7 @@ function generateBaseHTML (presetItems: ImagePresetProps[], fillColor: string): 
         break
     }
   })
+  // fallback
   metas.push(`<link rel='shortcut icon' href='favicon.ico' />`)
 
   if (presetItems.some(n => n.name === 'Android')) {
@@ -76,6 +94,7 @@ function generateBaseHTML (presetItems: ImagePresetProps[], fillColor: string): 
     metas.push(`<meta name='msapplication-TileColor' content='${fillColor}' />`)
   }
 
+  // 格式化需要，以确保生成文件的缩进和换行
   const data = [
     `<html>`,
     `  <head>`,
@@ -95,6 +114,9 @@ function generateBaseHTML (presetItems: ImagePresetProps[], fillColor: string): 
   return output
 }
 
+/**
+ * @description 生成 Google 推荐的 Web Manifest 文件
+ */
 function generateWebManifest (): ExportItem {
   const content = {
     short_name: 'My App',
@@ -124,6 +146,10 @@ function generateWebManifest (): ExportItem {
   return output
 }
 
+/**
+ * @description 生成 Windows Tile 所需的 browserconfig.xml 文件
+ * @param fillColor 填充色
+ */
 function generateBrowserConfig (fillColor: string): ExportItem {
   const data = [
     `<?xml version="1.0" encoding="utf-8"?>`,
@@ -149,14 +175,20 @@ function generateBrowserConfig (fillColor: string): ExportItem {
   return output
 }
 
+/**
+ * @description 下载文件
+ * @param items 下载项列表
+ */
 function download (items: ExportItem[]) {
   if (!items.length) return
 
+  // 单个文件直接打包
   if (items.length === 1) {
     FileSaver.saveAs(items[0].data, items[0].filename)
     return
   }
 
+  // 多文件打包下载
   const zip = new JSZip()
   for (const item of items) {
     if (item.mime.startsWith('image')) {
@@ -196,37 +228,28 @@ const Exporter = () => {
     // 待下载文件列表
     const filesToDownload: ExportItem[] = []
 
-    const baseHTML = generateBaseHTML(presetItems, fillColor)
-    if (baseHTML) {
-      filesToDownload.push(baseHTML)
-    }
+    // 生成 HTML 模板
+    filesToDownload.push(generateBaseHTML(presetItems, fillColor))
 
+    // 生成 Web Manifest
     if (selectedPresets.some(n => n.name === 'Android')) {
-      // Generate manifest.json
-      const manifest = generateWebManifest()
-      if (manifest) {
-        filesToDownload.push(manifest)
-      }
+      filesToDownload.push(generateWebManifest())
     }
 
+    // 生成 browserconfig.xml
     if (selectedPresets.some(n => n.name === 'Windows')) {
-      // Generate browserConfig.xml
-      const browserConfig = generateBrowserConfig(fillColor)
-      if (browserConfig) {
-        filesToDownload.push(browserConfig)
-      }
+      filesToDownload.push(generateBrowserConfig(fillColor))
     }
 
+    // 生成图片
     presetItems.forEach(presetItem => {
-      if (presetItem.mime.startsWith('image')) {
-        const options = { ...presetItem }
-        if (presetItem.name === 'Windows') {
-          options.fillColor = fillColor
-        }
-        const img = generateImage(file, options)
-        if (img) {
-          filesToDownload.push(img)
-        }
+      const options = { ...presetItem }
+      if (presetItem.name === 'Windows') {
+        options.fillColor = fillColor
+      }
+      const img = generateImage(file, options)
+      if (img) {
+        filesToDownload.push(img)
       }
     })
 
@@ -235,6 +258,8 @@ const Exporter = () => {
 
   return (
     <div className='exporter__container'>
+
+      {/* 预览所选预设对应的图片文件 */}
       <div className='table'>
         <div className='thead'>
           <div className='tr'>
@@ -249,16 +274,20 @@ const Exporter = () => {
               <div className='td'>{preset.width} &times; {preset.height}</div>
               <div className='td'>{preset.filename}</div>
               <div className='td'>
+
+                {/* 下载单张图片 */}
                 <Button fullWidth onClick={e => {
                   e && e.stopPropagation()
                   makeExport([preset])
                 }}>下载</Button>
+
               </div>
             </div>
           ))}
         </div>
       </div>
 
+      {/* 下载全部 */}
       <div className='toolbar'>
         <Button fullWidth onClick={e => {
           e && e.stopPropagation()
