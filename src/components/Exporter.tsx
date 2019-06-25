@@ -6,6 +6,11 @@ import { ImagePresetProps, ExportItem } from 'utils/interfaces'
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
+/**
+ * @description 通过 canvas 创建各尺寸的图片文件
+ * @param dataURL 图片文件的 dataURL
+ * @param options 该图片文件的配置信息（尺寸、颜色、扩展名、文件名等）
+ */
 function generateImage (dataURL: string, options: ImagePresetProps): ExportItem | undefined {
   const body = document.querySelector('body')
   if (!body) return undefined
@@ -44,6 +49,106 @@ function generateImage (dataURL: string, options: ImagePresetProps): ExportItem 
   return output
 }
 
+function generateBaseHTML (presetItems: ImagePresetProps[], fillColor: string): ExportItem {
+  const metas: string[] = []
+
+  presetItems.forEach(item => {
+    switch (item.name) {
+      case 'iOS':
+        metas.push(`<link rel='apple-touch-icon' size='${item.width}x${item.height}' href='${item.filename}' />`)
+        break
+      case 'Android':
+      case 'Web':
+        metas.push(`<link rel='icon' type='${item.mime}' size='${item.width}x${item.height}' href='${item.filename}' />`)
+        break
+      default:
+        break
+    }
+  })
+  metas.push(`<link rel='shortcut icon' href='favicon.ico' />`)
+
+  if (presetItems.some(n => n.name === 'Android')) {
+    metas.push(`<link rel='manifest' href='manifest.json' />`)
+    metas.push(`<meta name='theme-color' content='${fillColor}' />`)
+  }
+  if (presetItems.some(n => n.name === 'Windows')) {
+    metas.push(`<meta name='msapplication-TileImage' content='mstile-144x144.png' />`)
+    metas.push(`<meta name='msapplication-TileColor' content='${fillColor}' />`)
+  }
+
+  const data = [
+    `<html>`,
+    `  <head>`,
+    ...metas.map(n => `    ` + n),
+    `  </head>`,
+    `  <body>`,
+    `  </body>`,
+    `</html>`
+  ].join('\n')
+
+  const output = {
+    filename: 'index.html',
+    mime: 'text/html',
+    data
+  }
+
+  return output
+}
+
+function generateWebManifest (): ExportItem {
+  const content = {
+    short_name: 'My App',
+    name: 'My App',
+    icons: [
+      {
+        src: 'android-chrome-192x192.png',
+        sizes: '192x192',
+        type: 'image/png'
+      },
+      {
+        src: 'android-chrome-512x512.png',
+        sizes: '512x512',
+        type: 'image/png'
+      }
+    ]
+  }
+
+  const data = JSON.stringify(content, null, 2)
+
+  const output = {
+    filename: 'manifest.json',
+    mime: 'application/json',
+    data
+  }
+
+  return output
+}
+
+function generateBrowserConfig (fillColor: string): ExportItem {
+  const data = [
+    `<?xml version="1.0" encoding="utf-8"?>`,
+    `<browserconfig>`,
+    `  <msapplication>`,
+    `    <tile>`,
+    `      <square70x70logo src="/mstile-70x70.png"/>`,
+    `      <square150x150logo src="/mstile-150x150.png"/>`,
+    `      <wide310x150logo src="/mstile-310x150.png"/>`,
+    `      <square310x310logo src="/mstile-310x310.png"/>`,
+    `      <TileColor>${fillColor}</TileColor>`,
+    `    </tile>`,
+    `  </msapplication>`,
+    `</browserconfig>`
+  ].join('\n')
+
+  const output = {
+    filename: 'browserconfig.xml',
+    mime: 'application/xml',
+    data
+  }
+
+  return output
+}
+
 function download (items: ExportItem[]) {
   if (!items.length) return
 
@@ -66,30 +171,51 @@ function download (items: ExportItem[]) {
   })
 }
 
-function generateManifest (appName: string, appShortName: string, fillColor: string) {}
-
-function generateBrowserConfig (fillColor: string) {}
-
 const Exporter = () => {
   const {
     presets,
     fillColor,
-    useManifest,
-    appName,
-    appShortName,
     getSelectPresets
   } = useContext(PresetContext)
   const { file } = useContext(FileContext)
 
   const selectedPresets = getSelectPresets(presets)
 
-  function _export (presetItems: ImagePresetProps[]): void {
+  // 触发导出
+  function makeExport (presetItems: ImagePresetProps[]): void {
     if (!file) {
       window.alert('请先选择文件')
       return
     }
 
+    if (!presetItems.length) {
+      window.alert('请选择至少一个预设')
+      return
+    }
+
+    // 待下载文件列表
     const filesToDownload: ExportItem[] = []
+
+    const baseHTML = generateBaseHTML(presetItems, fillColor)
+    if (baseHTML) {
+      filesToDownload.push(baseHTML)
+    }
+
+    if (selectedPresets.some(n => n.name === 'Android')) {
+      // Generate manifest.json
+      const manifest = generateWebManifest()
+      if (manifest) {
+        filesToDownload.push(manifest)
+      }
+    }
+
+    if (selectedPresets.some(n => n.name === 'Windows')) {
+      // Generate browserConfig.xml
+      const browserConfig = generateBrowserConfig(fillColor)
+      if (browserConfig) {
+        filesToDownload.push(browserConfig)
+      }
+    }
 
     presetItems.forEach(presetItem => {
       if (presetItem.mime.startsWith('image')) {
@@ -103,18 +229,6 @@ const Exporter = () => {
         }
       }
     })
-
-    if (useManifest) {
-      // Generate manifest.json
-      generateManifest(appName, appShortName, fillColor)
-    }
-
-    if (selectedPresets.find(n => n.name === 'Windows')) {
-      // Generate browserConfig.xml
-      generateBrowserConfig(fillColor)
-    }
-
-    console.log(filesToDownload)
 
     download(filesToDownload)
   }
@@ -137,7 +251,7 @@ const Exporter = () => {
               <div className='td'>
                 <Button fullWidth onClick={e => {
                   e && e.stopPropagation()
-                  _export([preset])
+                  makeExport([preset])
                 }}>下载</Button>
               </div>
             </div>
@@ -148,7 +262,7 @@ const Exporter = () => {
       <div className='toolbar'>
         <Button fullWidth onClick={e => {
           e && e.stopPropagation()
-          _export(selectedPresets)
+          makeExport(selectedPresets)
         }}>下载全部</Button>
       </div>
 

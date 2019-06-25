@@ -29,16 +29,8 @@ const App = () => {
   const {
     presets,
     fillColor,
-    themeColor,
-    useManifest,
-    appName,
-    appShortName,
     togglePreset,
-    setFillColor,
-    setThemeColor,
-    toggleUseManifest,
-    setAppName,
-    setAppShortName
+    setFillColor
   } = useContext(PresetContext)
 
   const presetKeys: {name: string, chosen: boolean}[] = []
@@ -48,7 +40,6 @@ const App = () => {
     }
   })
 
-  const isAndroidChosen = presetKeys.some(n => n.name === 'Android' && n.chosen)
   const isWindowsChosen = presetKeys.some(n => n.name === 'Windows' && n.chosen)
 
   return (
@@ -75,10 +66,10 @@ const App = () => {
               )}
             </PresetList>
 
-            <SettingBlock title='Windows 设定'>
+            <SettingBlock title='Windows Tile 设定'>
               <FormItem
                 id='fill-color'
-                title='fillColor'
+                title='Fill Color'
                 type='color'
                 disabled={!isWindowsChosen}
                 value={fillColor}
@@ -88,51 +79,6 @@ const App = () => {
               />
             </SettingBlock>
 
-            <SettingBlock title='manifest.json 设定'>
-              <FormItem
-                id='manifest'
-                title='是否生成'
-                type='checkbox'
-                disabled={!isAndroidChosen}
-                checked={useManifest}
-                onChange={() => {
-                  toggleUseManifest()
-                }}
-              />
-
-              <FormItem
-                id='theme-color'
-                title='Theme Color'
-                type='color'
-                disabled={!isAndroidChosen || !useManifest}
-                value={themeColor}
-                onChange={(val) => {
-                  setThemeColor(val)
-                }}
-              />
-
-              <FormItem
-                id='app-name'
-                title='App Name'
-                type='input'
-                disabled={!isAndroidChosen || !useManifest}
-                value={appName}
-                onChange={(val) => {
-                  setAppName(val)
-                }}
-              />
-
-              <FormItem
-                id='app-short-name'
-                title='App Short Name'
-                type='input'
-                disabled={!isAndroidChosen || !useManifest}
-                value={appShortName}
-                onChange={(val) => {
-                  setAppShortName(val)
-                }}
-              />
-            </SettingBlock>
           </div>
         </Step>
 
