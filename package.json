@@ -68,6 +68,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "file-loader": "^4.0.0",
     "fs-extra": "^8.0.1",
+    "gh-pages": "^2.0.1",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "husky": "^2.3.0",
@@ -111,8 +112,7 @@
   "scripts": {
     "dev": "cross-env PORT=5007 node scripts/start.js",
     "build": "node scripts/build.js",
-    "version": "npm run changelog && git add CHANGELOG.md",
-    "unused": "echo 'command not implemented yet' && exit 1"
+    "deploy": "yarn build && gh-pages -d dist -b master"
   },
   "standard": {
     "parser": "@typescript-eslint/parser",
