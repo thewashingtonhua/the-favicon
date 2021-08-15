@@ -11,7 +11,7 @@ const AppBar = () => {
         <p className='app-intro'>一键生成各种 Favicon</p>
       </div>
       <div className='social-links'>
-        <a href='https://github.com/tonghuashuo/the-favicon' target='_blank' rel='noopener noreferrer'>
+        <a href='https://github.com/thewashingtonhua/the-favicon' target='_blank' rel='noopener noreferrer'>
           <ReactSVG src={iconGithub} />
         </a>
       </div>
