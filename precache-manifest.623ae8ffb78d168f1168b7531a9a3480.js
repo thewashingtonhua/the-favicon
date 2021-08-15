@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "352893a78dcecc8d77b4e5f4c17f7dfd",
+    "revision": "ad592daa05a42076c518838de7bb5485",
     "url": "/the-favicon/index.html"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/the-favicon/static/css/2.ca025b70.chunk.css"
   },
   {
-    "revision": "885b488cfb3a9804d367",
-    "url": "/the-favicon/static/css/main.27797caa.chunk.css"
+    "revision": "532fee39da0f0964411d",
+    "url": "/the-favicon/static/css/main.a53e1ed4.chunk.css"
   },
   {
     "revision": "5eedf90961844a9ff8aa",
     "url": "/the-favicon/static/js/2.73de653f.chunk.js"
   },
   {
-    "revision": "885b488cfb3a9804d367",
-    "url": "/the-favicon/static/js/main.042693d5.chunk.js"
+    "revision": "532fee39da0f0964411d",
+    "url": "/the-favicon/static/js/main.98bfd622.chunk.js"
   },
   {
     "revision": "97a563f9808cb1a585b2",
